@@ -1,1 +1,11 @@
+Find Missing Number (C Program)
 
+This project finds the missing number in an array containing integers from 1 to N,
+where one number is missing. It also includes automated test cases to validate the algorithm.
+
+FindMIssingSum/
+│── README.md
+│── SumHeader.h
+│── findmissingsum.c
+│── main.c
+│── test.c
