@@ -11,8 +11,6 @@ int main(){
     for(int i=0;name[i] != 0;i++){
        
     }
- 
-
     strcpy(nameCopy,name);
 
     printf("%s",nameCopy);
