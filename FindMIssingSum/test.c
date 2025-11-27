@@ -35,9 +35,9 @@ void testMissing(int testNo, int n) {
     printf("Result: %d\n", result);
 
     if (result == missing)
-        printf("TEST PASSED ✔\n");
+        printf("TEST PASSED \n");
     else
-        printf("TEST FAILED ❌\n");
+        printf("TEST FAILED \n");
 
     printf("=============================\n");
 }
