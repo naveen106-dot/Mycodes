@@ -1,0 +1,82 @@
+2025-12-05 17:17:02 [INFO] (test_median.c:124): ===== Running Median Tests =====
+2025-12-05 17:17:02 [INFO] (test_median.c:11): ----- Test Example 1 -----
+2025-12-05 17:17:02 [INFO] (test_median.c:12): Input nums1 = [1,3], nums2 = [2]
+2025-12-05 17:17:02 [INFO] (test_median.c:13): Expected Output = 2.00
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:17): Actual Output = 2.00
+2025-12-05 17:17:02 [INFO] (test_median.c:20): Test Example 1 PASSED
+2025-12-05 17:17:02 [INFO] (test_median.c:30): ----- Test Example 2 -----
+2025-12-05 17:17:02 [INFO] (test_median.c:31): Input nums1 = [1,2], nums2 = [3,4]
+2025-12-05 17:17:02 [INFO] (test_median.c:32): Expected Output = 2.50
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:36): Actual Output = 2.50
+2025-12-05 17:17:02 [INFO] (test_median.c:39): Test Example 2 PASSED
+2025-12-05 17:17:02 [INFO] (test_median.c:49): ----- Test Empty Array -----
+2025-12-05 17:17:02 [INFO] (test_median.c:50): Input nums1 = [], nums2 = [2,3]
+2025-12-05 17:17:02 [INFO] (test_median.c:51): Expected Output = 2.50
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:55): Actual Output = 2.50
+2025-12-05 17:17:02 [INFO] (test_median.c:58): Test Empty Array PASSED
+2025-12-05 17:17:02 [INFO] (test_median.c:68): ----- Test Single Elements -----
+2025-12-05 17:17:02 [INFO] (test_median.c:69): Input nums1 = [5], nums2 = [10]
+2025-12-05 17:17:02 [INFO] (test_median.c:70): Expected Output = 7.50
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:74): Actual Output = 7.50
+2025-12-05 17:17:02 [INFO] (test_median.c:77): Test Single Element PASSED
+2025-12-05 17:17:02 [INFO] (test_median.c:87): ----- Test Odd + Odd -----
+2025-12-05 17:17:02 [INFO] (test_median.c:88): Expected Output = 5.00
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:92): Actual Output = 5.00
+2025-12-05 17:17:02 [INFO] (test_median.c:95): Test Odd+Odd PASSED
+2025-12-05 17:17:02 [INFO] (test_median.c:105): ----- Test Even + Odd -----
+2025-12-05 17:17:02 [INFO] (test_median.c:106): Expected Output = 4.00
+2025-12-05 17:17:02 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:17:02 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:17:02 [INFO] (test_median.c:110): Actual Output = 4.00
+2025-12-05 17:17:02 [INFO] (test_median.c:113): Test Even+Odd PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:124): ===== Running Median Tests =====
+2025-12-05 17:19:20 [INFO] (test_median.c:11): ----- Test Example 1 -----
+2025-12-05 17:19:20 [INFO] (test_median.c:12): Input nums1 = [1,3], nums2 = [2]
+2025-12-05 17:19:20 [INFO] (test_median.c:13): Expected Output = 2.00
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:17): Actual Output = 2.00
+2025-12-05 17:19:20 [INFO] (test_median.c:20): Test Example 1 PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:30): ----- Test Example 2 -----
+2025-12-05 17:19:20 [INFO] (test_median.c:31): Input nums1 = [1,2], nums2 = [3,4]
+2025-12-05 17:19:20 [INFO] (test_median.c:32): Expected Output = 2.50
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:36): Actual Output = 2.50
+2025-12-05 17:19:20 [INFO] (test_median.c:39): Test Example 2 PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:49): ----- Test Empty Array -----
+2025-12-05 17:19:20 [INFO] (test_median.c:50): Input nums1 = [], nums2 = [2,3]
+2025-12-05 17:19:20 [INFO] (test_median.c:51): Expected Output = 2.50
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:55): Actual Output = 2.50
+2025-12-05 17:19:20 [INFO] (test_median.c:58): Test Empty Array PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:68): ----- Test Single Elements -----
+2025-12-05 17:19:20 [INFO] (test_median.c:69): Input nums1 = [5], nums2 = [10]
+2025-12-05 17:19:20 [INFO] (test_median.c:70): Expected Output = 7.50
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:74): Actual Output = 7.50
+2025-12-05 17:19:20 [INFO] (test_median.c:77): Test Single Element PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:87): ----- Test Odd + Odd -----
+2025-12-05 17:19:20 [INFO] (test_median.c:88): Expected Output = 5.00
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:92): Actual Output = 5.00
+2025-12-05 17:19:20 [INFO] (test_median.c:95): Test Odd+Odd PASSED
+2025-12-05 17:19:20 [INFO] (test_median.c:105): ----- Test Even + Odd -----
+2025-12-05 17:19:20 [INFO] (test_median.c:106): Expected Output = 4.00
+2025-12-05 17:19:20 [INFO] (median.c:6): Finding median of two sorted arrays
+2025-12-05 17:19:20 [INFO] (median.c:24): Arrays merged successfully
+2025-12-05 17:19:20 [INFO] (test_median.c:110): Actual Output = 4.00
+2025-12-05 17:19:20 [INFO] (test_median.c:113): Test Even+Odd PASSED

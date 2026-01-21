@@ -1,0 +1,48 @@
+[Unit]
+Description=Jetson Device Health Monitor Daemon
+Documentation=
+After=network.target syslog.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+# Working directory
+WorkingDirectory=/opt/device-health
+
+# Main process
+ExecStart=/usr/bin/python3 /opt/device-health/device_healthd.py -c /etc/device-health/config.yaml
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Resource limits
+MemoryMax=100M
+CPUQuota=5%
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/device-health
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=device-healthd
+
+# Graceful shutdown
+TimeoutStopSec=30
+KillMode=mixed
+KillSignal=SIGTERM
+
+# Environment
+Environment="PYTHONUNBUFFERED=1"
+Environment="DEVICE_HEALTH_CONFIG=/etc/device-health/config.yaml"
+
+[Install]
+WantedBy=multi-user.target

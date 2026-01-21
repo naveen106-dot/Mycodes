@@ -1,0 +1,19 @@
+# Python dependencies for Device Health Monitor Daemon
+
+# Core dependencies
+PyYAML>=5.4.1           # Configuration file parsing
+pathlib>=1.0.1          # Path manipulation (usually built-in)
+
+# Optional dependencies for enhanced features
+# Uncomment if needed:
+
+# psutil>=5.8.0         # Additional system metrics (alternative to sysfs)
+# numpy>=1.19.5         # Advanced numerical operations for anomaly detection
+# pandas>=1.1.5         # Data analysis and CSV processing
+# matplotlib>=3.3.4     # Chart generation (if implementing graphical reports)
+
+# Development dependencies
+# pytest>=6.2.4         # Unit testing
+# pytest-cov>=2.12.0    # Code coverage
+# pylint>=2.8.0         # Code linting
+# black>=21.5b0         # Code formatting

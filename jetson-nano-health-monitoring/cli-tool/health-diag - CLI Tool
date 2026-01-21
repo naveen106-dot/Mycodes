@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+"""
+Health Diagnostics CLI Tool
+Command-line interface for Jetson device health monitoring
+"""
+
+import sys
+import argparse
+import json
+from pathlib import Path
+from datetime import datetime
+
+# Add daemon directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent / 'daemon'))
+
+from sysfs_reader import SysfsReader
+from report_generator import ReportGenerator
+from json_exporter import JSONExporter
+from ascii_charts import ASCIICharts
+
+
+class HealthDiagCLI:
+    """CLI tool for health diagnostics"""
+    
+    def __init__(self):
+        """Initialize CLI tool"""
+        try:
+            self.reader = SysfsReader()
+            self.report_gen = ReportGenerator()
+            self.json_export = JSONExporter()
+            self.charts = ASCIICharts()
+        except RuntimeError as e:
+            print(f"Error: {e}")
+            print("Make sure the kernel module is loaded.")
+            sys.exit(1)
+    
+    def cmd_status(self, args):
+        """Show current device health status"""
+        metrics = self.reader.read_all_metrics()
+        
+        if not metrics:
+            print("Error: Failed to read metrics")
+            return 1
+        
+        # Print status
+        health = metrics.get('overall_health', 0)
+        status = metrics.get('health_status', 'UNKNOWN')
+        
+        print("╔═══════════════════════════════════════╗")
+        print("║   Jetson Device Health Status         ║")
+        print("╠═══════════════════════════════════════╣")
+        print(f"║  Overall Health: {health:3d} - {status:10s} ║")
+        print("╠═══════════════════════════════════════╣")
+        print(f"║  CPU Temp:  {metrics.get('cpu_temp', 0):6.1f}°C              ║")
+        print(f"║  GPU Temp:  {metrics.get('gpu_temp', 0):6.1f}°C              ║")
+        print(f"║  Memory:    {metrics.get('mem_usage', 0):3d}%                  ║")
+        print(f"║  CPU Load:  {metrics.get('cpu_load', 0):3d}%                  ║")
+        print(f"║  GPU Usage: {metrics.get('gpu_usage', 0):3d}%                  ║")
+        print(f"║  Storage:   {metrics.get('storage_usage', 0):3d}%                  ║")
+        print("╚═══════════════════════════════════════╝")
+        
+        return 0
+    
+    def cmd_report(self, args):
+        """Generate detailed health report"""
+        if args.format == 'text':
+            report = self.reader.read_full_report()
+            if report:
+                print(report)
+            else:
+                print("Error: Failed to generate report")
+                return 1
+        
+        elif args.format == 'json':
+            metrics = self.reader.read_all_metrics()
+            if metrics:
+                if args.output:
+                    self.json_export.export(metrics, args.output)
+                    print(f"Report saved to {args.output}")
+                else:
+                    print(json.dumps(metrics, indent=2))
+            else:
+                print("Error: Failed to read metrics")
+                return 1
+        
+        elif args.format == 'detailed':
+            metrics = self.reader.read_all_metrics()
+            if metrics:
+                report = self.report_gen.generate_detailed_report(metrics)
+                print(report)
+            else:
+                print("Error: Failed to read metrics")
+                return 1
+        
+        return 0
+    
+    def cmd_monitor(self, args):
+        """Real-time monitoring mode"""
+        import time
+        
+        print("Real-time monitoring (Press Ctrl+C to stop)")
+        print("-" * 60)
+        
+        try:
+            while True:
+                metrics = self.reader.read_all_metrics()
+                
+                if metrics:
+                    timestamp = datetime.now().strftime('%H:%M:%S')
+                    print(f"\r{timestamp} | "
+                          f"Health: {metrics.get('overall_health', 0):3d} | "
+                          f"CPU: {metrics.get('cpu_temp', 0):5.1f}°C {metrics.get('cpu_load', 0):3d}% | "
+                          f"GPU: {metrics.get('gpu_temp', 0):5.1f}°C {metrics.get('gpu_usage', 0):3d}% | "
+                          f"Mem: {metrics.get('mem_usage', 0):3d}%",
+                          end='', flush=True)
+                
+                time.sleep(args.interval)
+        
+        except KeyboardInterrupt:
+            print("\n\nMonitoring stopped")
+        
+        return 0
+    
+    def cmd_chart(self, args):
+        """Display ASCII charts of metrics"""
+        # Read historical data if available
+        log_dir = Path('/var/log/device-health/metrics')
+        
+        if not log_dir.exists():
+            print("No historical data available")
+            return 1
+        
+        # Find today's CSV file
+        today = datetime.now().strftime('%Y%m%d')
+        csv_file = log_dir / f"health_data_{today}.csv"
+        
+        if not csv_file.exists():
+            print(f"No data file found: {csv_file}")
+            return 1
+        
+        # Load and display charts
+        print("Loading historical data...")
+        self.charts.load_csv(csv_file)
+        
+        if args.metric == 'all':
+            self.charts.display_all()
+        else:
+            self.charts.display_metric(args.metric)
+        
+        return 0
+    
+    def cmd_alerts(self, args):
+        """Show current alert status"""
+        alert_flags = self.reader.get_alert_flags()
+        
+        print("Alert Status:")
+        print("-" * 40)
+        
+        # Check each alert flag
+        from sysfs_reader import (
+            ALERT_THERMAL_CRITICAL, ALERT_THERMAL_WARNING,
+            ALERT_MEMORY_CRITICAL, ALERT_MEMORY_WARNING,
+            ALERT_CPU_CRITICAL, ALERT_CPU_WARNING,
+            ALERT_GPU_CRITICAL, ALERT_GPU_WARNING,
+            ALERT_STORAGE_CRITICAL, ALERT_STORAGE_WARNING
+        )
+        
+        alerts = [
+            (ALERT_THERMAL_CRITICAL, "⛔ CRITICAL: Thermal"),
+            (ALERT_THERMAL_WARNING, "⚠️  WARNING: Thermal"),
+            (ALERT_MEMORY_CRITICAL, "⛔ CRITICAL: Memory"),
+            (ALERT_MEMORY_WARNING, "⚠️  WARNING: Memory"),
+            (ALERT_CPU_CRITICAL, "⛔ CRITICAL: CPU"),
+            (ALERT_CPU_WARNING, "⚠️  WARNING: CPU"),
+            (ALERT_GPU_CRITICAL, "⛔ CRITICAL: GPU"),
+            (ALERT_GPU_WARNING, "⚠️  WARNING: GPU"),
+            (ALERT_STORAGE_CRITICAL, "⛔ CRITICAL: Storage"),
+            (ALERT_STORAGE_WARNING, "⚠️  WARNING: Storage"),
+        ]
+        
+        active_alerts = False
+        for flag, message in alerts:
+            if alert_flags & flag:
+                print(message)
+                active_alerts = True
+        
+        if not active_alerts:
+            print("✓ No active alerts - System is healthy")
+        
+        return 0
+    
+    def cmd_config(self, args):
+        """Manage configuration"""
+        if args.action == 'show':
+            interval = self.reader.get_update_interval()
+            print(f"Update Interval: {interval} seconds")
+        
+        elif args.action == 'set-interval':
+            if args.value:
+                if self.reader.set_update_interval(int(args.value)):
+                    print(f"Update interval set to {args.value} seconds")
+                else:
+                    print("Error: Failed to set update interval (need root?)")
+                    return 1
+        
+        return 0
+
+
+def main():
+    """Main entry point"""
+    parser = argparse.ArgumentParser(
+        description='Jetson Device Health Diagnostics Tool',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+    
+    # Status command
+    subparsers.add_parser('status', help='Show current health status')
+    
+    # Report command
+    report_parser = subparsers.add_parser('report', help='Generate health report')
+    report_parser.add_argument('-f', '--format', 
+                              choices=['text', 'json', 'detailed'],
+                              default='text',
+                              help='Report format')
+    report_parser.add_argument('-o', '--output',
+                              help='Output file (for JSON format)')
+    
+    # Monitor command
+    monitor_parser = subparsers.add_parser('monitor', 
+                                           help='Real-time monitoring')
+    monitor_parser.add_argument('-i', '--interval', type=int, default=1,
+                               help='Update interval in seconds')
+    
+    # Chart command
+    chart_parser = subparsers.add_parser('chart', 
+                                         help='Display metric charts')
+    chart_parser.add_argument('-m', '--metric',
+                             choices=['all', 'health', 'thermal', 
+                                     'memory', 'cpu', 'gpu'],
+                             default='all',
+                             help='Metric to display')
+    
+    # Alerts command
+    subparsers.add_parser('alerts', help='Show alert status')
+    
+    # Config command
+    config_parser = subparsers.add_parser('config', 
+                                          help='Manage configuration')
+    config_parser.add_argument('action',
+                              choices=['show', 'set-interval'],
+                              help='Configuration action')
+    config_parser.add_argument('value', nargs='?',
+                              help='Value for set actions')
+    
+    # Parse arguments
+    args = parser.parse_args()
+    
+    if not args.command:
+        parser.print_help()
+        return 1
+    
+    # Create CLI instance and execute command
+    cli = HealthDiagCLI()
+    
+    command_map = {
+        'status': cli.cmd_status,
+        'report': cli.cmd_report,
+        'monitor': cli.cmd_monitor,
+        'chart': cli.cmd_chart,
+        'alerts': cli.cmd_alerts,
+        'config': cli.cmd_config
+    }
+    
+    try:
+        return command_map[args.command](args)
+    except KeyboardInterrupt:
+        print("\nInterrupted")
+        return 1
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+    

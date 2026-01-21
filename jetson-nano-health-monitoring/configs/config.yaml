@@ -1,0 +1,127 @@
+# Device Health Monitor Configuration
+
+# Monitoring settings
+monitoring:
+  interval: 5                    # Update interval in seconds (1-60)
+  enable_thermal: true           # Monitor thermal zones
+  enable_memory: true            # Monitor memory usage
+  enable_cpu: true               # Monitor CPU load
+  enable_gpu: true               # Monitor GPU usage
+  enable_storage: true           # Monitor storage usage
+
+# Logging configuration
+logging:
+  level: INFO                    # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_dir: /var/log/device-health
+  max_size: 10485760            # 10MB per log file
+  backup_count: 5               # Keep 5 rotated log files
+  console: false                # Also log to console (useful for debugging)
+
+# Alert settings
+alerts:
+  enabled: true
+  critical_threshold: 30        # Overall health critical threshold
+  warning_threshold: 60         # Overall health warning threshold
+  cooldown: 300                 # Cooldown period between alerts (seconds)
+  
+  # Component-specific thresholds
+  thresholds:
+    thermal:
+      critical: 85              # Temperature in Celsius
+      warning: 75
+    
+    memory:
+      critical: 95              # Percentage
+      warning: 85
+    
+    cpu:
+      critical: 95              # Percentage
+      warning: 80
+    
+    gpu:
+      critical: 95              # Percentage
+      warning: 80
+    
+    storage:
+      critical: 95              # Percentage
+      warning: 85
+
+# Anomaly detection settings
+anomaly_detection:
+  enabled: true
+  window_size: 60               # Number of samples to consider
+  sensitivity: 2.0              # Sigma threshold for anomaly detection
+  
+  # Detection methods
+  methods:
+    statistical: true           # Statistical anomaly detection
+    rapid_change: true          # Detect rapid changes
+    sustained_degradation: true # Detect sustained degradation
+
+# Data storage settings
+storage:
+  metrics_retention_days: 30    # How long to keep historical metrics
+  export_csv: true              # Export metrics to CSV files
+  csv_path: /var/log/device-health/metrics
+  
+  # Automatic cleanup
+  cleanup_enabled: true
+  cleanup_interval: 86400       # Cleanup check interval (seconds)
+
+# Notification settings (future expansion)
+notifications:
+  enabled: false
+  methods:
+    email: false
+    webhook: false
+    syslog: true
+  
+  email:
+    smtp_server: localhost
+    smtp_port: 25
+    from_address: health@jetson.local
+    to_addresses:
+      - admin@example.com
+  
+  webhook:
+    url: http://localhost:8080/webhook
+    timeout: 10
+  
+  syslog:
+    facility: LOCAL0
+    priority: WARNING
+
+# Performance tuning
+performance:
+  # Reduce monitoring frequency during low activity
+  adaptive_interval: false
+  low_activity_interval: 10     # Interval when system is idle
+  low_activity_threshold: 20    # CPU load threshold for "idle"
+  
+  # Resource limits
+  max_memory_mb: 100            # Maximum memory usage for daemon
+  max_cpu_percent: 5            # Maximum CPU usage for daemon
+
+# Advanced options
+advanced:
+  # Enable debug features
+  debug_mode: false
+  profiling: false
+  
+  # Kernel module path
+  module_path: /lib/modules/device_health.ko
+  sysfs_path: /sys/kernel/device_health
+  
+  # Data export formats
+  export_formats:
+    - csv
+    - json
+  
+  # Health scoring weights (must sum to 100)
+  health_weights:
+    thermal: 25
+    memory: 20
+    cpu: 20
+    gpu: 20
+    storage: 15
+    
