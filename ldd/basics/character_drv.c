@@ -103,24 +103,29 @@ static int __init ofcd_init(void)
     if (alloc_chrdev_region(&first, 0, 3, "Mahesh") < 0) {
         return -1;
     }
+    printk("major:%d",major(first));
+
 
     /* Create device class */
-    if ((cl = class_create("chardrv")) == NULL) {
+    cl = class_create("chardrv");
+    if (IS_ERR(cl)) {
         unregister_chrdev_region(first, 1);
-        return -1;
+        return PTR_ERR(cl);
     }
 
     /* Create device file */
-    if (device_create(cl, NULL, first, NULL, "mydevicefile") == NULL) {
+    dev = device_create(cl, NULL, first, NULL, "mydevicefile");
+    if (IS_ERR(dev)) {
         class_destroy(cl);
         unregister_chrdev_region(first, 1);
-        return -1;
+    return PTR_ERR(dev);
     }
 
     /* Initialize cdev */
     cdev_init(&c_dev, &pugs_fops);
 
-    /* Add cdev to kernel */
+    /* Add cdev to kernel 
+    it will true return 0 */
     if (cdev_add(&c_dev, first, 1) == -1) {
         device_destroy(cl, first);
         class_destroy(cl);

@@ -1,19 +1,33 @@
-// witre a c program for string copy
-
 #include <stdio.h>
-#include <string.h>
 
-int main(){
-    char name[20] = "Naveen";
+char *my_strcpy(char *dest, const char *src)
+{
+    char *temp = dest;
 
-    char nameCopy[20];
-    int index=0;
-    for(int i=0;name[i] != 0;i++){
-       
+    // Copy characters until null terminator
+    while (*src != '\0') {
+          printf("src:%c - des:%c\n",*src,*dest);
+        *dest = *src;
+        dest++;
+        src++;
+      
     }
-    strcpy(nameCopy,name);
 
-    printf("%s",nameCopy);
+    // Copy the null terminator
+    *dest = '\0';
 
+    return temp;
 }
 
+int main()
+{
+    char src[] = "HELLO Naveen How are you";
+    char dest[10];
+
+    my_strcpy(dest, src);
+
+    printf("Source      : %s\n", src);
+    printf("Destination : %s\n", dest);
+
+    return 0;
+}

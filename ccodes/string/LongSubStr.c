@@ -15,25 +15,6 @@ Explanation: The answer is "wke", with the length of 3.
 Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
 */
  
-#include <stdio.h>
-
-int main(){
-    int i,j;
-    char *input =  "abcabcbb",*set[128] = 0;
-
- for(i=0;input[i] == 0;i++){
-    for(j=i;input[j] == 0;j++){
-        if(set[j] != 0){
-
-        }else{
-            break;
-        }
-    }
- }
-
- for (int i=0;)
-
-}
 
 
 #include <stdio.h>

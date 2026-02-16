@@ -27,7 +27,6 @@ struct Node* createLinkedList(int num){
 }
 void printLinkedList(struct Node *head)
 {
-
     struct Node *temp = head;
     if(temp == NULL){
         printf("temp is Null \n");
@@ -78,6 +77,7 @@ void Insertposition(struct Node *head, int pos)
     temp->next = new;
     new->next = dummy;
 }
+
 /****************Delete Operation in node******************** */
 struct Node* deleteFromBeginning(struct Node *head)
 {
@@ -85,13 +85,14 @@ struct Node* deleteFromBeginning(struct Node *head)
     free(head);
     return temp;
 }
+
 struct Node * deleteFromEnd(struct Node *head)
 {
     if(head == NULL)
     {
      return NULL;   
     }
-    if(head->next == NULL)
+    if(head->next->next == NULL)
     {
         free(head->next);
         return NULL;
@@ -198,6 +199,70 @@ struct Node* findMiddleNode(struct Node *head)
     }
     return slow;
 }
+
+struct Node * connectingIterationNode(struct Node *head)
+{
+    struct Node *temp = head,*dummy = NULL;
+    while(temp->next != NULL)
+    {
+        if(temp->value == 104)
+        {
+            dummy = temp->next;
+        }
+        temp = temp->next;
+    }
+    if(temp->next == NULL)
+    {
+        temp->next = dummy;
+    }
+    temp = temp ->next;
+    printf("connected iteration Node:%d\n",temp->value);
+    return head;
+}
+void printLinkedListNTimes(struct Node *head,int n)
+{
+    struct Node *temp = head;
+    for(int i=0;i<n;i++)
+    {
+        printf("%d  ",temp->value);
+        temp = temp->next;
+    }
+}
+
+struct Node* findIterationNode(struct Node *head)
+{
+    struct Node *slow = head;
+    struct Node *fast = head->next;
+    while(slow != NULL && fast != NULL && fast->next != NULL)
+    {
+       
+        slow = slow->next;
+        fast = fast->next->next;
+        printf("slow:%p: %d - fast:%p :%d\n",slow,slow->value,fast,fast->value);
+        if(slow == fast )
+            break;
+    }
+    printf("After finding iteration Node :\n");
+    printf("slow:%d - fast:%d\n",slow->value,fast->value);
+}
+struct Node * revereselinkedlist(struct Node *head)
+{
+    struct Node *prev ,*current ,*next;
+    prev = 0;
+    current = next = head;
+    while(next != 0){
+        next = next->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    return head;
+}
+struct Node *sortTheLinkedList(struct Node head)
+{
+    
+}
+
 int main()
 {
     int num = 10;
@@ -209,7 +274,7 @@ int main()
     head = insertAtBegining(head);
     printf("after added first node\n ");
     printLinkedList(head);
-     head = insertAtEnd(head);
+    head = insertAtEnd(head);
     printf("after added last node\n ");
     printLinkedList(head);
     Insertposition(head,pos);
@@ -234,10 +299,12 @@ int main()
         printf("found value\n");
     
     findMiddleNode(head);
-    
-    
-    
-    
+    // head = connectingIterationNode(head);
+  
+    //printf("After connected iteration Node printing:\n");
+    //printLinkedListNTimes(head ,20);
+    //findIterationNode(head);
+    revereselinkedlist(head);
 
 
 }

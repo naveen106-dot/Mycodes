@@ -262,4 +262,4 @@ module_exit(i2c_test_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Your Name");
 MODULE_DESCRIPTION("Simple I2C Device Driver");
-MODULE_VERSION("1.0");
+MODULE_VERSION("1.0");6
