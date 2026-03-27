@@ -25,42 +25,51 @@
 #include <linux/usb.h>
 
 #define   VENDOR_ID 0x0781
-#define   PRODUCT_ID 0x5581   
+#define   PRODUCT_ID 0x5581
 
 
 static int usb_probe(struct usb_interface *interface,
                      const struct usb_device_id *id)
 {
+    struct usb_device *dev;
     struct usb_host_interface *iface_desc;
     struct usb_endpoint_descriptor *endpoint;
+    struct urb *urb;
+    char *buffer;
     int i;
 
     printk(KERN_INFO "USB Device Connected\n");
 
-    /* Get interface descriptor */
+    dev = interface_to_usbdev(interface);
     iface_desc = interface->cur_altsetting;
 
-    printk(KERN_INFO "Number of endpoints = %d\n",
-           iface_desc->desc.bNumEndpoints);
-
-    /* Loop through endpoints */
     for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
 
         endpoint = &iface_desc->endpoint[i].desc;
 
-        printk(KERN_INFO "Endpoint[%d]\n", i);
+        if (usb_endpoint_is_bulk_in(endpoint)) {
 
-        printk(KERN_INFO "Endpoint Address = 0x%x\n",
-               endpoint->bEndpointAddress);
+            printk(KERN_INFO "Bulk IN endpoint found\n");
 
-        printk(KERN_INFO "Attributes = 0x%x\n",
-               endpoint->bmAttributes);
+            buffer = kmalloc(512, GFP_KERNEL);
+            if (!buffer)
+                return -ENOMEM;
 
-        printk(KERN_INFO "Max Packet Size = %d\n",
-               endpoint->wMaxPacketSize);
+            urb = usb_alloc_urb(0, GFP_KERNEL);
+            if (!urb)
+                return -ENOMEM;
 
-        printk(KERN_INFO "Interval = %d\n",
-               endpoint->bInterval);
+            usb_fill_bulk_urb(urb, dev,
+                              usb_rcvbulkpipe(dev, endpoint->bEndpointAddress),
+                              buffer,
+                              512,
+                              usb_callback,
+                              NULL);
+
+            usb_submit_urb(urb, GFP_KERNEL);
+
+            break;
+        }
     }
 
     return 0;
@@ -77,7 +86,6 @@ static struct usb_device_id usb_table [] = {
         { }                      /* Terminating entry */
 };
 MODULE_DEVICE_TABLE (usb, usb_table);
-
 
 
 static struct usb_driver usb_drv = {
